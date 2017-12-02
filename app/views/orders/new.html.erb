@@ -1,0 +1,19 @@
+<h1>Checkout</h1>
+
+Total number of items: <%= @order.order_items.size %>
+
+<%= simple_form_for @order do |f| %>
+  <%= f.input :first_name %>
+  <%= f.input :last_name %>
+  
+  <%= f.input :email %>
+  
+  <%= f.input :country %>
+  <%= f.input :address_1 %>
+  <%= f.input :address_2 %>
+  <%= f.input :city %>
+  <%= f.input :postal_code %>
+  
+  <%= f.button :submit, "Submit order" %>
+
+<% end %>

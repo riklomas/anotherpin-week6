@@ -60,3 +60,39 @@ div.flash-success {
   color: $white;
   padding: 10px 20px 10px 20px;
 }
+
+table {
+  width: 100%;
+  
+  th {
+    text-align: left;
+  }
+  
+  th, td {
+    vertical-align: middle;
+  }
+  
+  thead th {
+    border-bottom: 1px solid $grey;
+    padding: 0 0 10px 0;
+  }
+  
+  tbody th, tbody td {
+    padding: 10px 0 10px 0;
+  }
+  
+  td img {
+    margin: 0 10px 0 0;
+    vertical-align: middle;
+  }
+}
+
+form.edit_order_item {
+  div {
+    display: inline;
+  }
+  
+  input[type=number] {
+    width: 60px;
+  }
+}

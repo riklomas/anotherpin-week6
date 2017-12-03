@@ -14,6 +14,42 @@ Total number of items: <%= @order.order_items.size %>
   <%= f.input :city %>
   <%= f.input :postal_code %>
   
+  <div id="card-errors">
+    <% @order.errors[:stripe_token].each do |message| %>
+      <p class="error"><%= message %></p>
+    <% end %>
+  </div>
+  
+  <div id="card"></div>
+  
   <%= f.button :submit, "Submit order" %>
 
 <% end %>
+
+<script>
+  var stripe = Stripe("<%= Rails.application.secrets.stripe_public_key %>")
+  var elements = stripe.elements()
+
+  var card = elements.create("card", { hidePostalCode: true })
+  card.mount("#card")  
+  
+  $("form.new_order").on("submit", function (ev) {
+    ev.preventDefault()
+    
+    stripe.createToken(card).then(function (result) {
+      if (result.error) {
+        $("#card-errors").html(result.error.message)
+      } else {
+        $("form.new_order").append("<input type=hidden name='order[stripe_token]' value=" + result.token.id + ">")
+        $("form.new_order").get(0).submit()
+      }      
+    })    
+  })
+</script>
+
+
+
+
+
+
+

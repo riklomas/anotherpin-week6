@@ -17,6 +17,8 @@ class OrdersController < ApplicationController
       reset_session
       
       flash[:success] = "Order completed"
+      
+      OrderMailer.receipt(@order).deliver_now
             
       redirect_to order_path(@order)
     else

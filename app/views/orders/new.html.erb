@@ -20,23 +20,81 @@ Total number of items: <%= @order.order_items.size %>
     <% end %>
   </div>
   
-  <div id="card"></div>
+  <!-- <div id="card"></div> -->
+  
+  <div class="input">
+    <label for="card-number">Card number</label>
+    <div id="card-number"></div>
+  </div>
+  
+  <div class="input">
+    <label for="card-number">Card expiry</label>
+    <div id="card-expiry"></div>
+  </div>
+  
+  <div class="input">
+    <label for="card-number">Card CVC</label>
+    <div id="card-cvc"></div>
+  </div>
   
   <%= f.button :submit, "Submit order" %>
 
 <% end %>
 
-<script>
+<script> 
+  // load the fonts in
+  var fonts = [
+    {
+      cssSrc: "https://fonts.googleapis.com/css?family=Karla"
+    }
+  ]
+  
+  // styles for the stripe inputs
+  var styles = {
+    base: {
+      iconColor: "#cccccc",
+      color: "#000000",
+      fontFamily: "Karla, Helvetica, Arial, sans-serif",
+      fontSize: "16px",
+      
+      "::placeholder": {
+        color: "#cccccc"
+      },
+      ":-webkit-autofill": {
+        color: "#cccccc"
+      }
+    },
+    invalid: {
+      iconColor: "#FFC7EE",
+      color: "#A31621"
+    }
+  }
+    
   var stripe = Stripe("<%= Rails.application.secrets.stripe_public_key %>")
-  var elements = stripe.elements()
+  
+  // load in the fonts from the array above
+  var elements = stripe.elements({ fonts: fonts })
 
-  var card = elements.create("card", { hidePostalCode: true })
-  card.mount("#card")  
+  // set the styles from the styles object
+  // var card = elements.create("card", { hidePostalCode: true, style: styles })
+  // card.mount("#card")  
+  
+  var cardNumber = elements.create('cardNumber', { style: styles });
+  cardNumber.mount('#card-number');
+
+  var cardExpiry = elements.create('cardExpiry', { style: styles });
+  cardExpiry.mount('#card-expiry');
+
+  var cardCvc = elements.create('cardCvc', { style: styles });
+  cardCvc.mount('#card-cvc');
+
+  // registerElements([cardNumber, cardExpiry, cardCvc], 'example3');
   
   $("form.new_order").on("submit", function (ev) {
     ev.preventDefault()
     
-    stripe.createToken(card).then(function (result) {
+    stripe.createToken(cardNumber).then(function (result) {
+      console.log(result.token.id)
       if (result.error) {
         $("#card-errors").html(result.error.message)
       } else {
